@@ -1,10 +1,23 @@
 import express from "express"
+import connectDB from "./src/config/mongo.config.js"
+import shortUrl from "./src/routes/shortUrl.route.js"
+import { redirectFromShortUrl } from "./src/controllers/shortUrl.controller.js"
+import dotenv from "dotenv"
+
+dotenv.config("./.env")
+
+
+
 const app = express()
 
-app.get('/', (req,res)=>{
-    res.send("Server is working!")
-})
+app.use(express.json());
+app.use(express.urlencoded({extended:true}))
+
+app.use('/api/create', shortUrl) 
+
+app.get("/:id",redirectFromShortUrl)
 
 app.listen(3000 ,()=>{
+    connectDB()
     console.log(`Server running at http://localhost:3000/ .`)
 })
